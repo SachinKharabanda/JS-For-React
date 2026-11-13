@@ -67,3 +67,38 @@ const exampleTernaryArrow = () => {
     return age > 10 ? <p>Pedro</p> : <p>John</p>;
 };
 
+//Objects
+
+const shorthandDeclaration = "This is a shorthand declaration";
+
+//how to define an object in JavaScript
+const person = {
+    name: "Pedro",
+    age: 20,
+    isMarried: false,
+    shorthandDeclaration //this is a shorthand declaration, it will be the same as writing "shorthandDeclaration: shorthandDeclaration"
+};
+
+//how to assign variables to object properties
+const objectName = person.name;
+const objectAge = person.age;
+const objectIsMarried = person.isMarried;
+
+
+//the above can be simplified using object destructuring
+const { name: destructuredName, age, isMarried } = person;
+
+//What happens if I want to declare another object
+//that has all the same properties as the person object, 
+//but with a different name
+
+const anotherPerson = {
+    ...person, //this will copy all the properties of the person object into the anotherPerson object
+    name: "John" //this will overwrite the name property of the anotherPerson object
+};
+
+//the same synatx works for arrays, for example:
+
+const numbers = [1, 2, 3, 4, 5];
+const moreNumbers = [...numbers, 6, 7, 8, 9, 10];
+
