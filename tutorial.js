@@ -102,3 +102,140 @@ const anotherPerson = {
 const numbers = [1, 2, 3, 4, 5];
 const moreNumbers = [...numbers, 6, 7, 8, 9, 10];
 
+
+//Section 4 - Array functions: map & filter
+
+/* map
+
+map() creates a NEW array by running a function on every item of the original array.
+The original array is not changed, and the new array always has the same length.
+
+*/
+
+const doubled = numbers.map((number) => number * 2); //[2, 4, 6, 8, 10]
+
+//map gives you the index as the second argument, if you need it
+const labelled = numbers.map((number, index) => `Item ${index}: ${number}`);
+
+//map is used in React to turn an array of data into a list of elements
+const people = [
+    { name: "Pedro", age: 20 },
+    { name: "John", age: 15 }
+];
+
+const names = people.map((person) => person.name); //["Pedro", "John"]
+
+//in React, each element in a mapped list needs a unique key
+// const listItems = people.map((person) => <li key={person.name}>{person.name}</li>);
+
+/* filter
+
+filter() creates a NEW array containing only the items that pass a test.
+The test is a function that returns true (keep the item) or false (drop it).
+
+*/
+
+const evenNumbers = numbers.filter((number) => number % 2 === 0); //[2, 4]
+
+const adults = people.filter((person) => person.age >= 18); //[{ name: "Pedro", age: 20 }]
+
+//filter and map can be chained, filter first then map
+const adultNames = people
+    .filter((person) => person.age >= 18)
+    .map((person) => person.name); //["Pedro"]
+
+/* Filtering in React
+
+Conditional rendering with filter works the same way. Filter the data first, then map it into elements:
+
+// const adultItems = people
+//     .filter((person) => person.age >= 18)
+//     .map((person) => <li key={person.name}>{person.name}</li>);
+
+*/
+
+//Section 5 - Async, await & fetch
+
+/* Async
+
+These are used to write code that waits for something (like data from a server) without freezing the rest of the program.
+
+An async function always returns a Promise.
+
+*/
+
+//normal function, returns a plain value
+function getGreeting() {
+    return "Hello";
+}
+
+//async function, same idea but it always returns a Promise
+async function getGreetingAsync() {
+    return "Hello";
+}
+
+/* Promises
+
+A Promise represents a value that will be available later.
+It is always in one of three states: pending, fulfilled (resolved) or rejected.
+
+*/
+
+const laterValue = () => new Promise((resolve) => {
+    setTimeout(() => resolve("Done after 1 second"), 1000);
+});
+
+/* Await
+
+await can only be used inside an async function. It pauses that function until the Promise settles,
+then gives you the resolved value. Other code keeps running in the meantime.
+
+*/
+
+async function showLaterValue() {
+    const result = await laterValue(); //waits for the promise to resolve
+    console.log(result); //"Done after 1 second"
+}
+
+/* Fetch
+
+fetch() is a built-in function for making HTTP requests (getting or sending data to a server/API).
+It returns a Promise that resolves to a Response object.
+The Response body must be converted to usable data, usually with .json().
+
+Note: fetch only rejects on network failures. A 404 or 500 response still resolves,
+so check response.ok yourself.
+
+*/
+
+async function getUser(userId) {
+    try {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}`);
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
+        }
+        const data = await response.json(); //parse the JSON body
+        return data;
+    } catch (error) {
+        console.log("Something went wrong:", error.message);
+    }
+}
+
+//the same request written with .then() instead of await (same result, older style)
+function getUserThen(userId) {
+    return fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+        .then(response => response.json())
+        .then(data => data.name);
+}
+
+/* Fetching in React
+
+In React, fetching is usually done inside useEffect and the result is stored in state:
+
+const [user, setUser] = useState(null);
+
+useEffect(() => {
+    getUser(1).then(setUser);
+}, []); //the empty array means "run once when the component mounts"
+
+*/
